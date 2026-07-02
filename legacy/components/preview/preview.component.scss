@@ -1,0 +1,48 @@
+:host ::ng-deep .preview-wrap {
+    background-color: #f3f3f3;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 1rem 4.5rem 1rem;
+    min-height: 100vh;
+    min-width: fit-content;
+
+    .content {
+        min-height: 28.5cm;
+        width: 21cm;
+        background-color: #fff;
+        padding: 20px;
+        position: relative;
+        box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+        cursor: auto;
+        pointer-events: none !important;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .table-options-wrap,
+    .resize-element,
+    .html-editor--table-edit-columns,
+    .html-editor--table-edit-rows,
+    .html-editor--table-edit,
+    .html-editor--drb,
+    .html-editor--cell-info-wrap,
+    .html-editor--row-actions,
+    .html-editor--header-actions,
+    .html-editor--footer-actions,
+    .image-options-wrap {
+        display: none !important;
+    }
+    
+    .html-editor--chips-wrap {
+        color: inherit;
+        border: none;
+    }
+
+    .table {
+        box-shadow: none !important;
+    }
+    .doted-border, .doted-border-header, .doted-border-footer {
+        border: none !important;
+    }
+
+}

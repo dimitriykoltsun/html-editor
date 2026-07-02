@@ -1,0 +1,10 @@
+:host ::ng-deep .dialog-wrap {
+    min-width: 370px;
+    min-height: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .mat-form-field-label {
+        color: #fff !important;
+    }
+}

@@ -1,0 +1,359 @@
+<div [hidden]="previewState" class="html-editor--main-wrap">
+    <div class="html-editor--head">
+        <div class="html-editor--head--section">
+            <div (clickOutside)="showParagraphFormat = false" class="html-editor--drb-wrap-text-style">
+                <button (click)="showParagraphFormat = !showParagraphFormat" [ngClass]="{'active': showParagraphFormat}"
+                    class="html-editor--item">
+                    {{selectedParagraphFormat?.lable || 'Normal'}}
+                    <i class="material-icons">
+                        expand_more
+                    </i>
+                </button>
+                <div *ngIf="showParagraphFormat" class="html-editor--drb">
+                    <div *ngFor="let format of paragraphFormatList" class="html-editor--drb--item"
+                        [ngClass]="{'active': selectedParagraphFormat?.tag === format.tag}">
+                        <button (click)="showParagraphFormat = false; selectedParagraphFormat = format"
+                            onclick="document.execCommand('removeFormat', false, ''); document.execCommand('formatBlock', false, this.value);"
+                            class="default-drb--item button" [value]="format.tag">
+                            <div [ngSwitch]="format.tag">
+                                <h1 *ngSwitchCase="'h1'">{{format.lable}}</h1>
+                                <h2 *ngSwitchCase="'h2'">{{format.lable}}</h2>
+                                <h3 *ngSwitchCase="'h3'">{{format.lable}}</h3>
+                                <h4 *ngSwitchCase="'h4'">{{format.lable}}</h4>
+                                <h5 *ngSwitchCase="'h5'">{{format.lable}}</h5>
+                                <h6 *ngSwitchCase="'h6'">{{format.lable}}</h6>
+                                <div *ngSwitchDefault>{{format.lable}}</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="html-editor--head--delimiter"></div>
+
+        <div class="html-editor--head--section">
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                [ngClass]="{'active': currentFontWeight}" gloss="Bold" (click)="currentFontWeight = !currentFontWeight;"
+                onclick="document.execCommand('bold', false, '')">
+                <i class="material-icons">
+                    format_bold
+                </i>
+            </button>
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                [ngClass]="{'active': currentItalic}" gloss="Italic" (click)="currentItalic = !currentItalic"
+                onclick="document.execCommand('italic', false, '');">
+                <i class="material-icons">
+                    format_italic
+                </i>
+            </button>
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                [ngClass]="{'active': currentUnderLine}" gloss="Underline"
+                (click)="currentUnderLine = !currentUnderLine" onclick="document.execCommand('underline', false, '');">
+                <i class="material-icons">
+                    format_underlined
+                </i>
+            </button>
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                [ngClass]="{'active': currentStrikeThrough}" gloss="Strike through"
+                (click)="currentStrikeThrough = !currentStrikeThrough"
+                onclick="document.execCommand('strikeThrough', false, '');">
+                <i class="material-icons">
+                    strikethrough_s
+                </i>
+            </button>
+        </div>
+
+        <div class="html-editor--head--delimiter"></div>
+        <div class="html-editor--head--section">
+            <div (clickOutside)="showDrbFontFamily = false" class="html-editor--drb-wrap-text-style">
+                <button (click)="showDrbFontFamily = !showDrbFontFamily" [ngClass]="{'active': showDrbFontFamily}"
+                    class="html-editor--item">
+                    {{selectedFontFamily?.lable || 'Manrope'}}
+                    <i class="material-icons">
+                        expand_more
+                    </i>
+                </button>
+                <div *ngIf="showDrbFontFamily" class="html-editor--drb">
+                    <div *ngFor="let font of fontFamilyList" class="html-editor--drb--item"
+                        [ngClass]="{'active': selectedFontFamily?.value === font.value}">
+                        <button (click)="showDrbFontFamily = false; selectedFontFamily = font"
+                            onclick="document.execCommand ('fontName', false, this.value);"
+                            class="default-drb--item button" [value]="font.value">
+                            {{font.lable}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="html-editor--head--delimiter"></div>
+
+        <div class="html-editor--head--section">
+            <div (clickOutside)="showDrbFontSize = false" class="html-editor--drb-wrap-text-style">
+                <button (click)="showDrbFontSize = !showDrbFontSize" [ngClass]="{'active': showDrbFontSize}"
+                    class="html-editor--item">
+                    {{selectedFontSize?.lable || '14px'}}
+                    <i class="material-icons">
+                        expand_more
+                    </i>
+                </button>
+                <div *ngIf="showDrbFontSize" class="html-editor--drb">
+                    <div *ngFor="let size of fontSizeList" class="html-editor--drb--item"
+                        [ngClass]="{'active': selectedFontSize?.value === size.value}">
+                        <button (click)="showDrbFontSize = false; selectedFontSize = size; setFontSize(size.value)"
+                            class="default-drb--item button" [value]="size.value">
+                            {{size.lable}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="html-editor--head--delimiter"></div>
+
+        <div class="html-editor--head--section ">
+            <button (click)="generatecol6('1:1')"
+                class="html-editor--item html-editor--item-button html-editor--tooltip" gloss="Page Separation">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                    <path
+                        d="M360-680v400-400Zm360 480v-560h120v560H720Zm-440 0v-560h400v560H280Zm-160 0v-560h120v560H120Zm240-80h240v-400H360v400Z" />
+                </svg>
+            </button>
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip" gloss="Horizontal Rule"
+                (click)="insertHorizontalRule()">
+                <i class="material-icons">
+                    horizontal_rule
+                </i>
+            </button>
+        </div>
+        <div class="html-editor--head--delimiter"></div>
+
+        <div class="html-editor--head--section ">
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip" id="html-editor--header-btn"
+                gloss="Header Document" (click)="generateHeaderFooter('header')">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px"
+                    height="18px" viewBox="0 0 22 22" version="1.1">
+                    <g id="surface1">
+                        <path style=" stroke:none;fill-rule:nonzero;fill:#666;fill-opacity:1;"
+                            d="M 15.277344 0 L 4.214844 0 C 3.472656 0 2.867188 0.605469 2.867188 1.347656 L 2.867188 20.632812 C 2.867188 21.375 3.472656 21.980469 4.214844 21.980469 L 17.765625 21.980469 C 18.507812 21.980469 19.113281 21.375 19.113281 20.632812 L 19.113281 4.167969 Z M 15.597656 2.015625 L 17.277344 3.84375 L 15.597656 3.84375 Z M 17.980469 20.632812 C 17.980469 20.75 17.882812 20.847656 17.765625 20.847656 L 4.214844 20.847656 C 4.09375 20.847656 4 20.75 4 20.632812 L 4 1.347656 C 4 1.230469 4.09375 1.132812 4.214844 1.132812 L 14.464844 1.132812 L 14.464844 4.410156 C 14.464844 4.722656 14.71875 4.976562 15.03125 4.976562 L 17.980469 4.976562 Z M 13.660156 5.21875 L 5.210938 5.21875 L 5.210938 2.957031 L 13.660156 2.957031 C 13.660156 2.96875 13.660156 2.980469 13.660156 2.992188 Z M 13.660156 5.21875 " />
+                    </g>
+                </svg>
+            </button>
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip" id="html-editor--footer-btn"
+                gloss="Footer Document" (click)="generateHeaderFooter('footer')">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px"
+                    height="18px" viewBox="0 0 22 22" version="1.1">
+                    <g id="surface1">
+                        <path style=" stroke:none;fill-rule:nonzero;fill:#666;fill-opacity:1;"
+                            d="M 15.277344 0 L 4.214844 0 C 3.472656 0 2.867188 0.605469 2.867188 1.347656 L 2.867188 20.632812 C 2.867188 21.375 3.472656 21.980469 4.214844 21.980469 L 17.765625 21.980469 C 18.507812 21.980469 19.113281 21.375 19.113281 20.632812 L 19.113281 4.167969 Z M 15.597656 2.015625 L 17.277344 3.84375 L 15.597656 3.84375 Z M 17.980469 20.632812 C 17.980469 20.75 17.882812 20.847656 17.765625 20.847656 L 4.214844 20.847656 C 4.097656 20.847656 4 20.75 4 20.632812 L 4 1.347656 C 4 1.230469 4.097656 1.132812 4.214844 1.132812 L 14.464844 1.132812 L 14.464844 4.410156 C 14.464844 4.722656 14.71875 4.976562 15.03125 4.976562 L 17.980469 4.976562 Z M 5.210938 16.808594 L 16.238281 16.808594 L 16.238281 19.070312 L 5.210938 19.070312 Z M 5.210938 16.808594 " />
+                    </g>
+                </svg>
+            </button>
+        </div>
+        <div class="html-editor--head--delimiter"></div>
+
+        <div class="html-editor--head--section ">
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                [ngClass]="{'active': currentOrderedList}" gloss="Ordered List"
+                (click)="currentOrderedList = !currentOrderedList" (click)="insertList('num')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="14" viewBox="0 0 17 14">
+                    <path [ngStyle]="{'fill': currentOrderedList ? '#fff' : '#333'}" fill-rule="nonzero"
+                        d="M0 11.375h1.75v.438H.875v.874h.875v.438H0V14h2.625v-3.5H0v.875zM.875 3.5h.875V0H0v.875h.875V3.5zM0 6.125h1.575L0 7.962v.788h2.625v-.875H1.05l1.575-1.837V5.25H0v.875zM4.375.875v1.75h12.25V.875H4.375zm0 12.25h12.25v-1.75H4.375v1.75zm0-5.25h12.25v-1.75H4.375v1.75z" />
+                </svg>
+            </button>
+
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                [ngClass]="{'active': currentUnorderedList}" gloss="Unordered List"
+                (click)="currentUnorderedList = !currentUnorderedList; insertList('dot')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14">
+                    <path [ngStyle]="{'fill': currentUnorderedList ? '#fff' : '#333'}" fill-rule="nonzero"
+                        d="M1.4 5.6C.625 5.6 0 6.225 0 7c0 .775.625 1.4 1.4 1.4.775 0 1.4-.625 1.4-1.4 0-.775-.625-1.4-1.4-1.4zm0-5.6C.625 0 0 .625 0 1.4c0 .775.625 1.4 1.4 1.4.775 0 1.4-.625 1.4-1.4C2.8.625 2.175 0 1.4 0zm0 11.2c-.775 0-1.4.635-1.4 1.4 0 .765.635 1.4 1.4 1.4.765 0 1.4-.635 1.4-1.4 0-.765-.625-1.4-1.4-1.4zm2.8 2.333h13.067v-1.866H4.2v1.866zm0-5.6h13.067V6.067H4.2v1.866zm0-7.466v1.866h13.067V.467H4.2z" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="html-editor--head--delimiter"></div>
+
+        <div class="html-editor--head--section ">
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip" gloss="Link"
+                (click)="createLink()">
+                <i class="material-icons">
+                    link
+                </i>
+            </button>
+        </div>
+
+        <div class="html-editor--head--delimiter"></div>
+
+        <div class="html-editor--head--section">
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip" (click)="openDialog()"
+                gloss="Upload image">
+                <i style="pointer-events: none; position: absolute;" class="material-icons html-editor--tooltip">
+                    insert_photo
+                </i>
+            </button>
+        </div>
+
+        <!-- <div class="html-editor--head--section">
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                gloss="Upload video"
+                (click)="openDialog();showVideoDialog = true">
+                <i class="material-icons">
+                    videocam
+                </i>
+            </button>
+        </div> -->
+
+        <div class="html-editor--head--delimiter"></div>
+
+        <div class="html-editor--head--section">
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                [ngClass]="{'active': currentJustifyLeft}" gloss="Justify Left"
+                (click)="currentJustifyLeft = !currentJustifyLeft; currentJustifyCenter = false; currentJustifyRight = false"
+                onclick="document.execCommand('justifyLeft', false, '');">
+                <i class="material-icons">
+                    format_align_left
+                </i>
+            </button>
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                [ngClass]="{'active': currentJustifyCenter}" gloss="Justify Center"
+                (click)="currentJustifyCenter = !currentJustifyCenter; currentJustifyRight = false; currentJustifyLeft = false"
+                onclick="document.execCommand('justifyCenter', false, '');">
+                <i class="material-icons">
+                    format_align_center
+                </i>
+            </button>
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                [ngClass]="{'active': currentJustifyRight}" gloss="Justify Right"
+                (click)="currentJustifyRight = !currentJustifyRight; currentJustifyLeft = false; currentJustifyCenter = false"
+                onclick="document.execCommand('justifyRight', false, '');">
+                <i class="material-icons">
+                    format_align_right
+                </i>
+            </button>
+
+
+        </div>
+
+        <div class="html-editor--head--delimiter"></div>
+
+        <div class="html-editor--head--section ">
+            <div (clickOutside)="showDrbFontColor = false" class="pos-r">
+                <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                    (click)="showDrbFontColor = !showDrbFontColor" gloss="Font color">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 17 18">
+                        <g fill="none" fill-rule="evenodd" transform="translate(0 -3)">
+                            <text fill="#000" font-family="Roboto-Regular, Roboto" font-size="20">
+                                <tspan x="0" y="21">A</tspan>
+                            </text>
+                            <circle cx="12" cy="16" r="4" [attr.fill]="currentColour || '#666'" stroke="#F5F5F5"
+                                stroke-width="2" />
+                        </g>
+                    </svg>
+                </button>
+                <div *ngIf="showDrbFontColor" class="html-editor--drb colors header">
+                    <button *ngFor="let color of fontColorList" [ngStyle]="{'background': color.value}"
+                        (click)="showDrbFontColor = false;"
+                        onclick="document.execCommand ('foreColor', false, this.value);"
+                        class="html-editor--drb-wrap--item button" [value]="color.value">
+                    </button>
+                </div>
+            </div>
+            <div (clickOutside)="showDrbBackgroundColor = false" class="pos-r">
+                <button class="html-editor--item html-editor--item-button html-editor--tooltip"
+                    (click)="showDrbBackgroundColor = !showDrbBackgroundColor" gloss="Background color">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 17 18">
+                        <g fill="none" fill-rule="evenodd" transform="translate(0 -3)">
+                            <text fill="#000" font-family="Roboto-Regular, Roboto" font-size="20">
+                                <tspan x="0" y="21">A</tspan>
+                            </text>
+                            <circle cx="12" cy="16" r="4" [attr.fill]="currentBackColour || '#fff'" stroke="#666"
+                                stroke-width="2" />
+                        </g>
+                    </svg>
+                </button>
+                <div *ngIf="showDrbBackgroundColor" class="html-editor--drb colors header">
+                    <button *ngFor="let color of fontColorList" [ngStyle]="{'background': color.value}"
+                        (click)="showDrbBackgroundColor = false;"
+                        onclick="document.execCommand ('backcolor', false, this.value);"
+                        class="html-editor--drb-wrap--item button" [value]="color.value">
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="html-editor--head--delimiter"></div>
+
+        <div class="pos-r none-blur" (clickOutside)="showTableConstructor = false"
+            (click)="showTableConstructor = !showTableConstructor">
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip" id="tableBtn" gloss="Table">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                    <path
+                        d="M360-240h440v-107H360v107ZM160-613h120v-107H160v107Zm0 187h120v-107H160v107Zm0 186h120v-107H160v107Zm200-186h440v-107H360v107Zm0-187h440v-107H360v107ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Z" />
+                </svg>
+            </button>
+            <div [ngClass]="{'show': showTableConstructor}" class="table-constructor">
+                <div id="tableConstructorBody" #tableConstructorBody class="body">
+                    <div *ngFor="let row of constructorData; let i = index">
+                        <button class="button" *ngFor="let col of row; let j = index"
+                            [id]="'tableConstructorElement-' + (i + 1) + '-' + (j + 1)" #tableConstructorElement
+                            class="item none-blur" (click)="generateTable($event)">
+                            <div class="inside"></div>
+                        </button>
+                    </div>
+                </div>
+                <div class="foot">
+                    <span id="rows" #rows>0</span> x <span id="cols" #cols>0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="html-editor--head--delimiter"></div>
+
+        <div class="html-editor--head--section">
+            <button class="html-editor--item html-editor--item-button html-editor--tooltip" gloss="Show Preview" (click)="showPreview()">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                    <path
+                        d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-480H200v480Zm280-80q-82 0-146.5-44.5T240-440q29-71 93.5-115.5T480-600q82 0 146.5 44.5T720-440q-29 71-93.5 115.5T480-280Zm0-60q56 0 102-26.5t72-73.5q-26-47-72-73.5T480-540q-56 0-102 26.5T306-440q26 47 72 73.5T480-340Zm0-100Zm0 60q25 0 42.5-17.5T540-440q0-25-17.5-42.5T480-500q-25 0-42.5 17.5T420-440q0 25 17.5 42.5T480-380Z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div class="p-grid p-jc-center" style="background-color: #f3f3f3; flex-grow: 1; padding: 1rem 1rem 4.7rem; margin-top: 35px;">
+        <div class="html-editor--edit-wrap-outer">
+            <div class="html-editor--edit-wrap drop-target" id="edit-wrap" style="min-height: 28.5cm;"
+                droppable="true" [ngStyle]="{'width': selectedPaperFormat[cropFormat] + 'cm'}"
+                contenteditable="false" #editableContainer (drop)="onDrop($event)"
+                (dragover)="allowDrop($event)">
+                <div contenteditable="false"></div>
+                <div contenteditable="true" class="html-editor--inside-container"
+                    style="flex-grow: 1;"></div>
+            </div>
+        </div>
+        <div class="p-2"
+            style="margin-left: 16px; background-color: #fff; min-width: 300px">
+            <h4 class="mb-4 pl-2">Fields</h4>
+            <div *ngFor="let field of fieldsList" class="flex p-2 field-btn"
+                (dragstart)="catchDrop(field); showFieldBox(true)" (dragend)="showFieldBox(false)"
+                draggable="true">
+                <span class="material-symbols-outlined">
+                    {{field.icon}}
+                </span>
+                <div class="ml-2">
+                    {{field.name}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="html-editor-footer">
+    <button mat-flat-button color="primary" (click)="back()">
+        <span>
+            Back
+        </span>
+    </button>
+</div>
+<app-preview *ngIf="previewState" [content]="content" (closePrev)="closePreview()">
+    <div preview >
+    </div>
+</app-preview>
